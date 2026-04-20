@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Icy Spicy Restaurant & Cafe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8A96E;
+    --gold-light: #E8D5A3;
+    --dark: #0D0D0D;
+    --dark2: #1A1A1A;
+    --dark3: #242424;
+    --dark4: #2E2E2E;
+    --text: #F5F0E8;
+    --text-muted: #A09080;
+    --red: #E05A3A;
+    --green: #4CAF50;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--dark); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(180deg, #0D0D0D 0%, #1a1208 50%, #0D0D0D 100%);
+    padding: 48px 20px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(200,169,110,0.15) 0%, transparent 70%);
+  }
+  .hero-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+  .hero-logo .icy { color: #7EC8E3; }
+  .hero-logo .spicy { color: var(--red); }
+  .hero-logo .rest { color: var(--text); }
+  .hero-tagline { color: var(--gold); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
+  .hero-divider { width: 60px; height: 1px; background: var(--gold); margin: 16px auto; opacity: 0.5; }
+  .table-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(200,169,110,0.12); border: 1px solid rgba(200,169,110,0.3);
+    padding: 6px 16px; border-radius: 20px; font-size: 13px; color: var(--gold-light);
+    margin-top: 4px;
+  }
+
+  /* CATEGORY NAV */
+  .cat-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--dark2);
+    border-bottom: 1px solid var(--dark4);
+    padding: 0 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .cat-nav::-webkit-scrollbar { display: none; }
+  .cat-nav-inner { display: inline-flex; gap: 4px; padding: 10px 0; }
+  .cat-btn {
+    padding: 7px 14px; border-radius: 20px; border: 1px solid var(--dark4);
+    background: transparent; color: var(--text-muted); font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .cat-btn.active { background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 500; }
+
+  /* MENU */
+  .menu-wrap { padding: 16px 16px 120px; max-width: 600px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--gold);
+    padding: 24px 0 12px;
+    border-bottom: 1px solid var(--dark4);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title span { font-size: 18px; }
+
+  .item-card {
+    background: var(--dark2);
+    border: 1px solid var(--dark4);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+    transition: border-color 0.2s;
+  }
+  .item-card:hover { border-color: rgba(200,169,110,0.3); }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .item-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .item-price { font-size: 13px; color: var(--gold); font-weight: 500; white-space: nowrap; margin-top: 2px; }
+  .item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .veg-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1.5px solid var(--green); background: var(--green); flex-shrink: 0;
+  }
+
+  /* ADD BUTTON */
+  .add-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--gold); background: transparent;
+    color: var(--gold); font-size: 20px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .add-btn:hover { background: var(--gold); color: var(--dark); }
+  .qty-ctrl { display: flex; align-items: center; gap: 8px; }
+  .qty-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--gold); background: transparent;
+    color: var(--gold); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .qty-btn:hover { background: var(--gold); color: var(--dark); }
+  .qty-num { font-size: 14px; font-weight: 500; min-width: 16px; text-align: center; color: var(--text); }
+
+  /* HALF/FULL */
+  .hf-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .hf-btn {
+    padding: 4px 12px; border-radius: 20px; font-size: 11px;
+    border: 1px solid var(--dark4); background: transparent;
+    color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hf-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(200,169,110,0.1); }
+
+  /* CART BAR */
+  .cart-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: var(--gold);
+    padding: 14px 20px;
+    display: none; align-items: center; justify-content: space-between;
+    cursor: pointer;
+    max-width: 600px; margin: 0 auto;
+  }
+  .cart-bar.show { display: flex; }
+  .cart-bar-left { display: flex; align-items: center; gap: 10px; }
+  .cart-count { background: var(--dark); color: var(--gold); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .cart-label { font-size: 14px; font-weight: 600; color: var(--dark); }
+  .cart-total { font-size: 14px; font-weight: 700; color: var(--dark); }
+
+  /* ORDER MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.85);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--dark2);
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 600px;
+    max-height: 85vh; overflow-y: auto;
+    padding: 0 0 24px;
+  }
+  .modal-handle { width: 40px; height: 4px; background: var(--dark4); border-radius: 2px; margin: 14px auto 20px; }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--gold);
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--dark4);
+  }
+  .cart-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--dark4); }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-size: 14px; font-weight: 500; }
+  .cart-item-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .cart-item-price { font-size: 13px; color: var(--gold); font-weight: 600; white-space: nowrap; }
+
+  .order-summary { padding: 16px 20px; }
+  .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .summary-row.total { font-size: 16px; color: var(--text); font-weight: 600; border-top: 1px solid var(--dark4); padding-top: 12px; margin-top: 4px; }
+
+  .table-input-wrap { padding: 0 20px 16px; }
+  .table-input-wrap label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px; }
+  .table-input {
+    width: 100%; background: var(--dark3); border: 1px solid var(--dark4); border-radius: 8px;
+    padding: 10px 14px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif;
+  }
+  .table-input:focus { outline: none; border-color: var(--gold); }
+
+  .place-order-btn {
+    margin: 0 20px; width: calc(100% - 40px);
+    background: var(--gold); color: var(--dark);
+    border: none; border-radius: 12px; padding: 16px;
+    font-size: 15px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .place-order-btn:hover { opacity: 0.9; }
+
+  /* SUCCESS */
+  .success-screen {
+    position: fixed; inset: 0; z-index: 400;
+    background: var(--dark);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 24px; text-align: center;
+  }
+  .success-screen.show { display: flex; }
+  .success-icon { font-size: 64px; margin-bottom: 20px; }
+  .success-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold); margin-bottom: 12px; }
+  .success-sub { color: var(--text-muted); font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+  .success-order-id { background: var(--dark2); border: 1px solid var(--dark4); border-radius: 10px; padding: 12px 24px; font-size: 13px; color: var(--gold); margin-bottom: 32px; }
+  .new-order-btn {
+    background: transparent; border: 1.5px solid var(--gold); color: var(--gold);
+    padding: 12px 32px; border-radius: 10px; font-size: 14px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+
+  .spicy-icon { font-size: 11px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-logo">
+    <span class="icy">Icy</span> <span class="spicy">Spicy</span><br>
+    <span class="rest" style="font-size:0.65em; letter-spacing:4px; font-weight:400;">RESTAURANT & CAFE</span>
+  </div>
+  <div class="hero-tagline">Anand Nagar, Gwalior</div>
+  <div class="hero-divider"></div>
+  <div class="table-badge">📱 Scan & Order — Pure Veg</div>
+</div>
+
+<nav class="cat-nav">
+  <div class="cat-nav-inner" id="catNav"></div>
+</nav>
+
+<div class="menu-wrap" id="menuWrap"></div>
+
+<div class="cart-bar" id="cartBar" onclick="openCart()">
+  <div class="cart-bar-left">
+    <div class="cart-count" id="cartCount">0</div>
+    <div class="cart-label">View Order</div>
+  </div>
+  <div class="cart-total" id="cartBarTotal">₹0</div>
+</div>
+
+<!-- Cart Modal -->
+<div class="modal-overlay" id="cartModal" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Your Order</div>
+    <div id="cartItems"></div>
+    <div class="order-summary" id="orderSummary"></div>
+    <div class="table-input-wrap">
+      <label>Table Number</label>
+      <input class="table-input" id="tableInput" type="text" placeholder="e.g. Table 4" />
+    </div>
+    <div class="table-input-wrap">
+      <label>Special Instructions (optional)</label>
+      <input class="table-input" id="instrInput" type="text" placeholder="Less spicy, extra sauce..." />
+    </div>
+    <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+  </div>
+</div>
+
+<!-- Success Screen -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">Order Placed!</div>
+  <div class="success-sub">Your order has been sent to the kitchen.<br>We'll serve you shortly.</div>
+  <div class="success-order-id" id="successOrderId"></div>
+  <button class="new-order-btn" onclick="resetOrder()">Order More Items</button>
+</div>
+
+<script>
+const MENU = [
+  { section: "🥙 Thali & Combos", id: "thali", items: [
+    { name: "Veg Thali", desc: "Chole Masala + Dal Fry + Rice + 4 Butter Roti + Raita + Salad + Achar", price: 150 },
+    { name: "Deluxe Thali", desc: "Paneer Dish + Chole Masala + Yellow Dal + Rice + 4 Butter Roti + Raita + Salad + Achar", price: 180 },
+    { name: "Special Thali", desc: "Paneer + Mix Veg + Dal Makhani + Jeera Rice + 2 Butter Nan + Raita + Sweet + Salad + Achar + Papad", price: 230 },
+    { name: "Punjabi Thali", desc: "Chole Masala & Dal Makhani + 2 Butter Nan + Salad + Achar", price: 170 },
+    { name: "Punjabi Special Thali", desc: "Butter Paneer Masala & Dal Makhani + 2 Butter Nan + Salad + Achar", price: 200 },
+    { name: "Dal Rice Mix", desc: "Combo", price: 120 },
+    { name: "Chole Rice", desc: "Combo", price: 120 },
+    { name: "Butter Khichdi", desc: "Combo", price: 120 },
+    { name: "Poori Aloo", desc: "Combo", price: 120 },
+    { name: "1 Butter Nan & Dal Makhani", desc: "Combo", price: 120 },
+    { name: "1 Butter Nan & Kadhai Paneer", desc: "Combo", price: 140 },
+    { name: "1 Butter Nan & B.P.M", desc: "Combo", price: 140 },
+    { name: "1 Butter Nan & Chole Masala", desc: "Combo", price: 120 },
+  ]},
+  { section: "🍕 Pizza & Pasta", id: "pizza", items: [
+    { name: "Loaded Cheese Pizza", desc: "Onion, Capsicum, Tomato, Paneer, Corn, Jalapeno, Red Pepper, Olives", price: 220 },
+    { name: "Veg Cheese Pizza", desc: "Onion, Capsicum, Tomato", price: 190 },
+    { name: "Paneer Cheese Pizza", desc: "Paneer, Capsicum, Onion & Red Pepper", price: 200 },
+    { name: "Special Cheese Pizza", desc: "Paneer, Mushroom, Onion, Jalapeno", price: 200 },
+    { name: "Corn Cheese Pizza", desc: "Corn, Capsicum, Black Olives", price: 190 },
+    { name: "Italian Cheese Pizza", desc: "Corn, Capsicum, Black Olives, Red Pepper", price: 210 },
+    { name: "Paprika Cheese Pizza", desc: "Paneer, Capsicum, Red Pepper", price: 210 },
+    { name: "Red Sauce Pasta", price: 189 },
+    { name: "White Sauce Pasta", price: 189 },
+    { name: "Pink Sauce Pasta", price: 189 },
+    { name: "Cheese Garlic Bread", price: 129 },
+  ]},
+  { section: "🍔 Burger & Sandwich", id: "burger", items: [
+    { name: "Aloo Tikki Burger", price: 75, withCheese: 105 },
+    { name: "Veggie Burger", price: 89, withCheese: 119 },
+    { name: "Paneer Burger", price: 99, withCheese: 129 },
+    { name: "Corn Sandwich", price: 89, withCheese: 119 },
+    { name: "Veg Sandwich", price: 89, withCheese: 119 },
+    { name: "Paneer Sandwich", price: 99, withCheese: 129 },
+    { name: "Bombay Sandwich", price: 129, withCheese: 159 },
+  ]},
+  { section: "🥤 Shakes & Beverages", id: "beverages", items: [
+    { name: "Cold Coffee", price: 110 },
+    { name: "Chocolate Shake", price: 110 },
+    { name: "KitKat Shake", price: 135 },
+    { name: "Oreo Shake", price: 135 },
+    { name: "Mango Shake", price: 115 },
+    { name: "Strawberry Shake", price: 115 },
+    { name: "Pineapple Shake", price: 115 },
+    { name: "Butterscotch Shake", price: 115 },
+    { name: "Cold Drink (250ml)", price: 50 },
+    { name: "Dahi Lassi", price: 80 },
+    { name: "Masala Chaas", price: 50 },
+    { name: "Fresh Lime Soda/Water", price: 65 },
+    { name: "Jaljeera", price: 60 },
+    { name: "Tea / Coffee", price: 50 },
+    { name: "Mineral Water Chilled", price: 25 },
+  ]},
+  { section: "🍜 Chinese", id: "chinese", items: [
+    { name: "Veg Manchurian (Gravy/Dry)", price: 140 },
+    { name: "Paneer Manchurian (Gravy/Dry)", price: 170 },
+    { name: "Chilli Potato", price: 140 },
+    { name: "Honey Chilli Potato", price: 170 },
+    { name: "French Fries", price: 95 },
+    { name: "Chilli Paneer (Gravy/Dry)", price: 170 },
+    { name: "Chilli Babycorn", price: 170 },
+    { name: "Crispy Veg", price: 170 },
+    { name: "Corn Salt & Pepper", price: 170 },
+    { name: "Crispy Corn", price: 170 },
+    { name: "Chinese Bhel", price: 120 },
+    { name: "Singapore Fried Rice", price: 130 },
+    { name: "Veg Fried Rice", price: 120 },
+    { name: "Schezwan Fried Rice", price: 140 },
+    { name: "Chilli Garlic Fried Rice", price: 160 },
+    { name: "Singapore Noodles", price: 140 },
+    { name: "Veg Chowmein", price: 120 },
+    { name: "Hakka Noodles", price: 130 },
+    { name: "Schezwan Noodles", price: 140 },
+    { name: "American Chop Suey", price: 160 },
+    { name: "Chilli Garlic Noodles", price: 160 },
+  ]},
+  { section: "🍵 Soup", id: "soup", items: [
+    { name: "Tomato Soup", price: 99, full: 139 },
+    { name: "Manchow Soup", price: 99, full: 139 },
+    { name: "Lemon Coriander Soup", price: 99, full: 139 },
+    { name: "Sweet Corn Soup", price: 99, full: 139 },
+    { name: "Hot & Sour Soup", price: 99, full: 139 },
+  ]},
+  { section: "🌮 Street Food", id: "street", items: [
+    { name: "Pav Bhaji", price: 95 },
+    { name: "Butter Pav Bhaji", price: 115 },
+    { name: "Cheese Pav Bhaji", price: 139 },
+    { name: "Chole Bhature", price: 110 },
+    { name: "Paneer Chole Bhature", price: 130 },
+    { name: "Chole Kulche", price: 80 },
+  ]},
+  { section: "🔥 Starters", id: "starters", items: [
+    { name: "Soya Chaap Tikka", price: 200 },
+    { name: "Afghani Chaap Tikka", price: 240 },
+    { name: "Paneer Tikka", price: 200 },
+    { name: "Afghani Paneer Tikka", price: 240 },
+    { name: "Achari Paneer Tikka", price: 220 },
+    { name: "Pudhina Paneer Tikka", price: 220 },
+    { name: "Hara Bhara Kabab", price: 170 },
+    { name: "Peanut Masala", price: 140 },
+    { name: "Chilli Corn", price: 170 },
+    { name: "Corn Chaat", price: 90 },
+  ]},
+  { section: "🍛 Paneer Main Course", id: "paneer", items: [
+    { name: "Kadhai Paneer", price: 135, full: 200 },
+    { name: "Butter Paneer Masala", price: 135, full: 200 },
+    { name: "Shahi Paneer (Red/White)", price: 150, full: 210 },
+    { name: "Matar Paneer", price: 135, full: 180 },
+    { name: "Handi Paneer", price: 140, full: 210 },
+    { name: "Paneer Lababdar", price: 145, full: 210 },
+    { name: "Paneer Roganjosh", price: 145, full: 210 },
+    { name: "Punjabi Paneer", price: 145, full: 210 },
+    { name: "Chole Paneer", price: 135, full: 180 },
+    { name: "Palak Paneer", price: 180 },
+    { name: "Paneer Tikka Masala", price: 240 },
+    { name: "Paneer Masala", price: 220 },
+    { name: "Kaju Paneer", price: 260 },
+    { name: "Paneer Noorani", price: 240 },
+    { name: "Paneer Bhurji", price: 220 },
+    { name: "Paneer Do Pyaza", price: 220 },
+    { name: "Paneer Kolhapuri", price: 220 },
+    { name: "Kaju Curry", price: 260 },
+    { name: "Kaju Masala", price: 260 },
+    { name: "Paneer Kaleji", price: 250 },
+    { name: "Paneer Makhani", price: 240 },
+    { name: "Paneer Toofani", price: 260 },
+    { name: "Malai Kofta (Yellow/White)", price: 240 },
+    { name: "Khoya Paneer", price: 260 },
+  ]},
+  { section: "🥦 Veg Main Course", id: "veg", items: [
+    { name: "Chole Masala", price: 110, full: 150 },
+    { name: "Mix Vegetable", price: 105, full: 160 },
+    { name: "Sev Bhaji", price: 110, full: 140 },
+    { name: "Sev Tamatar", price: 120, full: 150 },
+    { name: "Bhindi Masala", price: 180 },
+    { name: "Veg Kohlapuri", price: 170 },
+    { name: "Veg Jalfrezi", price: 190 },
+    { name: "Veg Do Pyaza", price: 180 },
+    { name: "Matar Masala", price: 140 },
+    { name: "Aloo Gobhi", price: 140 },
+    { name: "Aloo Matar", price: 140 },
+    { name: "Jeera Aloo", price: 140 },
+    { name: "Punjabi Veg Kofta", price: 170 },
+    { name: "Dum Aloo (Punjabi/Jaipuri/Kashmiri)", price: 180 },
+    { name: "Mushroom Paneer", price: 150, full: 210 },
+    { name: "Matar Mushroom", price: 150, full: 200 },
+    { name: "Mushroom Masala", price: 150, full: 200 },
+    { name: "Mushroom Do Pyaza", price: 150, full: 210 },
+    { name: "Soya Chaap Tikka Masala", price: 160, full: 240 },
+    { name: "Soya Chaap Handi Masala", price: 150, full: 200 },
+    { name: "Soya Chaap Masala", price: 150, full: 200 },
+  ]},
+  { section: "🫘 Dal", id: "dal", items: [
+    { name: "Dal Makhani", price: 120, full: 180 },
+    { name: "Dal Fry", price: 90, full: 130 },
+    { name: "Dal Tadka", price: 110, full: 160 },
+    { name: "Dal Fry Butter", price: 110, full: 150 },
+    { name: "Dal Fry Hari Mirch Tadka", price: 110, full: 150 },
+    { name: "Dal Punjabi", price: 110, full: 150 },
+    { name: "Dal Pachmel", price: 140, full: 190 },
+    { name: "Dal Bhukhara", price: 140, full: 190 },
+  ]},
+  { section: "🍚 Rice", id: "rice", items: [
+    { name: "Jeera Rice", price: 90, full: 130 },
+    { name: "Steamed Rice", price: 80, full: 110 },
+    { name: "Matar Pulav", price: 100, full: 140 },
+    { name: "Veg Pulav", price: 110, full: 150 },
+    { name: "Paneer Pulav", price: 120, full: 160 },
+    { name: "Veg Biryani", price: 180 },
+    { name: "Handi Biryani", price: 180 },
+    { name: "Matka Biryani", price: 220 },
+  ]},
+  { section: "🫓 Roti & Nan", id: "roti", items: [
+    { name: "Tawa Roti Plain", price: 12 },
+    { name: "Tawa Roti Butter", price: 15 },
+    { name: "Tandoori Roti Plain", price: 13 },
+    { name: "Tandoori Roti Butter", price: 16 },
+    { name: "Butter Nan", price: 50 },
+    { name: "Plain Nan", price: 40 },
+    { name: "Laccha Paratha", price: 50 },
+    { name: "Missi Roti", price: 30 },
+    { name: "Garlic Nan", price: 80 },
+    { name: "Stuff Nan", price: 70 },
+  ]},
+  { section: "🥗 Salad & Raita", id: "salad", items: [
+    { name: "Green Salad", price: 50, full: 70 },
+    { name: "Onion Salad", price: 30, full: 50 },
+    { name: "Sirka Onion", price: 30, full: 50 },
+    { name: "Kachumar Salad", price: 90 },
+    { name: "Fried Green Chillies", price: 25 },
+    { name: "Fruit Raita", price: 130 },
+    { name: "Pineapple Raita", price: 150 },
+    { name: "Boondi Raita", price: 80 },
+    { name: "Plain Dahi", price: 60 },
+    { name: "Veg Raita", price: 100 },
+  ]},
+  { section: "🫓 Breakfast & Snacks", id: "breakfast", items: [
+    { name: "Aloo Paratha", price: 75 },
+    { name: "Mix Veg Paratha", price: 85 },
+    { name: "Paneer Paratha", price: 99 },
+    { name: "Gobhi Paratha", price: 95 },
+    { name: "Aloo Pyaj Paratha", price: 80 },
+    { name: "Pyaj Paratha", price: 80 },
+    { name: "Paneer Pakoda", price: 140 },
+    { name: "Onion Pakoda", price: 120 },
+    { name: "Veg Pakoda", price: 120 },
+    { name: "Masala Dosa", price: 90 },
+    { name: "Paneer Masala Dosa", price: 110 },
+    { name: "Mysore Masala Dosa", price: 125 },
+    { name: "Rawa Masala Dosa", price: 125 },
+    { name: "Idli Sambhar", price: 50 },
+    { name: "Onion Uttapam", price: 90 },
+    { name: "Onion Tomato Uttapam", price: 90 },
+    { name: "Mix Veg Uttapam", price: 110 },
+    { name: "Paneer Uttapam", price: 110 },
+  ]},
+  { section: "🍦 Dessert & Ice Cream", id: "dessert", items: [
+    { name: "Gulab Jamun (2 pcs.)", price: 70 },
+    { name: "Matka Kulfi", price: 65 },
+    { name: "Ice Cream Cone", desc: "Butterscotch / Strawberry / Chocolate", price: 40 },
+    { name: "Ice Cream Scoops", desc: "Butterscotch / Strawberry / Chocolate / Vanilla / Mango / Pineapple / Tutti-Frutti", price: 60 },
+  ]},
+  { section: "🫓 Papad", id: "papad", items: [
+    { name: "Masala Papad", price: 65 },
+    { name: "Dry Papad", price: 30 },
+    { name: "Fry Papad", price: 50 },
+  ]},
+];
+
+let cart = {};
+
+function getCartKey(sIdx, iIdx, variant) { return `${sIdx}-${iIdx}-${variant}`; }
+
+function buildMenu() {
+  const nav = document.getElementById('catNav');
+  const wrap = document.getElementById('menuWrap');
+  nav.innerHTML = ''; wrap.innerHTML = '';
+
+  MENU.forEach((sec, sIdx) => {
+    // Nav btn
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (sIdx === 0 ? ' active' : '');
+    btn.textContent = sec.section.split(' ').slice(1).join(' ');
+    btn.onclick = () => {
+      document.getElementById('sec-' + sIdx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    nav.appendChild(btn);
+
+    // Section
+    const secEl = document.createElement('div');
+    secEl.id = 'sec-' + sIdx;
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.innerHTML = `<span>${sec.section.split(' ')[0]}</span>${sec.section.split(' ').slice(1).join(' ')}`;
+    secEl.appendChild(title);
+
+    sec.items.forEach((item, iIdx) => {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.id = `card-${sIdx}-${iIdx}`;
+
+      const hasHF = item.full !== undefined;
+      const defaultVariant = hasHF ? 'half' : 'std';
+      const displayPrice = hasHF ? item.price : item.price;
+
+      card.innerHTML = `
+        <div class="veg-dot"></div>
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          ${item.desc ? `<div class="item-desc">${item.desc}</div>` : ''}
+          ${hasHF
+            ? `<div class="item-price" id="price-${sIdx}-${iIdx}">Half ₹${item.price} · Full ₹${item.full}</div>`
+            : item.withCheese
+            ? `<div class="item-price">₹${item.price} · With Cheese ₹${item.withCheese}</div>`
+            : `<div class="item-price">₹${item.price}</div>`
+          }
+        </div>
+        <div class="item-right">
+          <div class="add-btn" id="addbtn-${sIdx}-${iIdx}" onclick="addItem(${sIdx},${iIdx})">+</div>
+          <div class="qty-ctrl hidden" id="qty-${sIdx}-${iIdx}">
+            <button class="qty-btn" onclick="changeQty(${sIdx},${iIdx},-1)">−</button>
+            <span class="qty-num" id="qnum-${sIdx}-${iIdx}">1</span>
+            <button class="qty-btn" onclick="changeQty(${sIdx},${iIdx},1)">+</button>
+          </div>
+        </div>
+      `;
+      secEl.appendChild(card);
+    });
+    wrap.appendChild(secEl);
+  });
+
+  // Intersection observer for nav highlight
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = e.target.id.split('-')[1];
+        document.querySelectorAll('.cat-btn').forEach((b,i) => b.classList.toggle('active', i == idx));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  MENU.forEach((_,i) => { const el = document.getElementById('sec-'+i); if(el) observer.observe(el); });
+}
+
+function getVariant(sIdx, iIdx) {
+  const item = MENU[sIdx].items[iIdx];
+  if (!item.full) return 'std';
+  // Check if user selected
+  const key = `sel-${sIdx}-${iIdx}`;
+  return window[key] || 'half';
+}
+
+function addItem(sIdx, iIdx) {
+  const item = MENU[sIdx].items[iIdx];
+  const variant = getVariant(sIdx, iIdx);
+  const key = getCartKey(sIdx, iIdx, variant);
+  const price = variant === 'full' ? item.full : item.price;
+
+  if (cart[key]) {
+    cart[key].qty++;
+  } else {
+    cart[key] = { sIdx, iIdx, variant, qty: 1, price, name: item.name };
+  }
+
+  document.getElementById('addbtn-' + sIdx + '-' + iIdx).classList.add('hidden');
+  document.getElementById('qty-' + sIdx + '-' + iIdx).classList.remove('hidden');
+  document.getElementById('qnum-' + sIdx + '-' + iIdx).textContent = getTotalQtyForItem(sIdx, iIdx);
+  updateCartBar();
+}
+
+function getTotalQtyForItem(sIdx, iIdx) {
+  return Object.keys(cart).filter(k => k.startsWith(`${sIdx}-${iIdx}-`)).reduce((s, k) => s + cart[k].qty, 0);
+}
+
+function changeQty(sIdx, iIdx, delta) {
+  const item = MENU[sIdx].items[iIdx];
+  const variant = getVariant(sIdx, iIdx);
+  const key = getCartKey(sIdx, iIdx, variant);
+
+  if (!cart[key] && delta > 0) { addItem(sIdx, iIdx); return; }
+  if (!cart[key]) return;
+
+  cart[key].qty += delta;
+  if (cart[key].qty <= 0) { delete cart[key]; }
+
+  const total = getTotalQtyForItem(sIdx, iIdx);
+  if (total <= 0) {
+    document.getElementById('addbtn-' + sIdx + '-' + iIdx).classList.remove('hidden');
+    document.getElementById('qty-' + sIdx + '-' + iIdx).classList.add('hidden');
+  } else {
+    document.getElementById('qnum-' + sIdx + '-' + iIdx).textContent = total;
+  }
+  updateCartBar();
+}
+
+function updateCartBar() {
+  const totalQty = Object.values(cart).reduce((s, v) => s + v.qty, 0);
+  const totalAmt = Object.values(cart).reduce((s, v) => s + v.qty * v.price, 0);
+  const bar = document.getElementById('cartBar');
+  document.getElementById('cartCount').textContent = totalQty;
+  document.getElementById('cartBarTotal').textContent = '₹' + totalAmt;
+  bar.classList.toggle('show', totalQty > 0);
+}
+
+function openCart() {
+  const modal = document.getElementById('cartModal');
+  modal.classList.add('show');
+  renderCartModal();
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('cartModal')) {
+    document.getElementById('cartModal').classList.remove('show');
+  }
+}
+
+function renderCartModal() {
+  const items = document.getElementById('cartItems');
+  const summary = document.getElementById('orderSummary');
+  items.innerHTML = '';
+
+  const entries = Object.values(cart);
+  entries.forEach(v => {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    const sub = v.variant === 'half' ? 'Half' : v.variant === 'full' ? 'Full' : '';
+    row.innerHTML = `
+      <div class="cart-item-info">
+        <div class="cart-item-name">${v.name}</div>
+        <div class="cart-item-sub">${sub ? sub + ' · ' : ''}Qty: ${v.qty}</div>
+      </div>
+      <div class="cart-item-price">₹${v.qty * v.price}</div>
+    `;
+    items.appendChild(row);
+  });
+
+  const subtotal = entries.reduce((s, v) => s + v.qty * v.price, 0);
+  summary.innerHTML = `
+    <div class="summary-row"><span>Subtotal</span><span>₹${subtotal}</span></div>
+    <div class="summary-row"><span>GST (5%)</span><span>₹${Math.round(subtotal * 0.05)}</span></div>
+    <div class="summary-row total"><span>Total</span><span>₹${Math.round(subtotal * 1.05)}</span></div>
+  `;
+}
+
+function placeOrder() {
+  const table = document.getElementById('tableInput').value.trim();
+  const instr = document.getElementById('instrInput').value.trim();
+  if (!table) { document.getElementById('tableInput').focus(); document.getElementById('tableInput').style.borderColor = '#e05a3a'; return; }
+
+  const orderId = 'IS' + Date.now().toString().slice(-6);
+  document.getElementById('cartModal').classList.remove('show');
+  document.getElementById('successOrderId').innerHTML = `Order #${orderId} · ${table}${instr ? '<br><span style="font-size:12px;color:#A09080">Note: ' + instr + '</span>' : ''}`;
+  document.getElementById('successScreen').classList.add('show');
+}
+
+function resetOrder() {
+  cart = {};
+  document.getElementById('successScreen').classList.remove('show');
+  document.querySelectorAll('.add-btn').forEach(b => b.classList.remove('hidden'));
+  document.querySelectorAll('.qty-ctrl').forEach(b => b.classList.add('hidden'));
+  document.getElementById('cartBar').classList.remove('show');
+  document.getElementById('tableInput').value = '';
+  document.getElementById('instrInput').value = '';
+}
+
+buildMenu();
+</script>
+</body>
+</html>
